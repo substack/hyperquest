@@ -61,6 +61,10 @@ outside of the `opts` so long as they are called on the same tick.
 
 Set an outgoing header `key` to `value`.
 
+## req.setLocation(uri);
+
+Set the location if you didn't specify it in the `hreq()` call.
+
 ## hreq.get(uri, opts)
 
 Return a readable stream from `hreq(..., { method: 'GET' })`.

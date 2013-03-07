@@ -4,9 +4,10 @@ var through = require('through');
 var duplexer = require('duplexer');
 var Stream = require('stream');
 
-module.exports = function (uri, opts) {
+module.exports = function (uri, opts, cb) {
     if (typeof uri === 'object') {
         opts = uri;
+        cb = opts;
         uri = undefined;
     }
     if (!opts) opts = {};
@@ -35,6 +36,7 @@ module.exports = function (uri, opts) {
         if (!req.duplex) r.end();
     });
     
+    if (cb) dup.on('response', cb);
     return dup;
 };
 
@@ -72,8 +74,10 @@ Req.prototype._send = function () {
 Req.prototype.setHeader = function (key, value) {
     if (this._sent) throw new Error('request already sent');
     this.headers[key] = value;
+    return this;
 };
 
 Req.prototype.setLocation = function (uri) {
     this.uri = uri;
+    return this;
 };
