@@ -36,7 +36,10 @@ module.exports = function (uri, opts, cb) {
         if (!req.duplex) r.end();
     });
     
-    if (cb) dup.on('response', cb);
+    if (cb) {
+        dup.on('error', cb);
+        dup.on('response', cb.bind(dup, null));
+    }
     return dup;
 };
 
