@@ -30,7 +30,10 @@ module.exports = function (uri, opts, cb) {
             dup.response = res;
             dup.emit('response', res);
             if (req.duplex) res.pipe(rs)
-            else res.on('data', function (buf) { rs.queue(buf) })
+            else {
+                res.on('data', function (buf) { rs.queue(buf) });
+                res.on('end', function () { rs.queue(null) });
+            }
         });
         
         if (!req.duplex) r.end();
