@@ -190,6 +190,11 @@ outside of the `opts` so long as they are called on the same tick.
 Optionally you can pass a `cb(err, res)` to set up listeners for `'error'` and
 `'response'` events in one place.
 
+Note that the optional `cb` is NOT like
+[request](https://github.com/mikeal/request)
+in that hyperquest will not buffer content for you or decode to json or any such
+magical thing.
+
 ## req.setHeader(key, value);
 
 Set an outgoing header `key` to `value`.
