@@ -22,7 +22,13 @@ module.exports = function (uri, opts, cb) {
     }
     dup.request = req;
     
+    var closed = false;
+    dup.on('close', function () { closed = true });
+    
     process.nextTick(function () {
+        if (closed) return;
+        dup.on('close', function () { r.destroy() });
+        
         var r = req._send();
         r.on('error', dup.emit.bind(dup, 'error'));
         
