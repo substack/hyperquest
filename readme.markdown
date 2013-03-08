@@ -2,6 +2,8 @@
 
 treat http requests as a streaming transport
 
+[![build status](https://secure.travis-ci.org/substack/hyperquest.png)](http://travis-ci.org/substack/hyperquest)
+
 The hyperquest api is a subset of [request](https://github.com/mikeal/request).
 
 # rant
