@@ -26,6 +26,8 @@ function hyperquest (uri, opts, cb, extra) {
         rs.writable = false;
     }
     dup.request = req;
+    dup.setHeader = req.setHeader.bind(req);
+    dup.setLocation = req.setLocation.bind(req);
     
     var closed = false;
     dup.on('close', function () { closed = true });
