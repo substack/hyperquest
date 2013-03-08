@@ -8,17 +8,16 @@ var server = http.createServer(function (req, res) {
     res.end('beep boop');
 });
 
-var port;
-test('set up', function (t) {
-    server.listen(0, function () {
-        port = server.address().port;
-        t.end();
-    });
-});
-
 test('get', function (t) {
     t.plan(2);
-    
+    server.listen(0, function () {
+        var port = server.address().port;
+        check(t, port);
+    });
+    t.on('end', server.close.bind(server));
+});
+
+function check (t, port) {
     var r = hreq('http://localhost:' + port);
     r.pipe(through(write, end));
     
@@ -31,9 +30,4 @@ test('get', function (t) {
     function end () {
         t.equal(data, 'beep boop');
     }
-});
-
-test('tear down', function (t) {
-    server.close();
-    t.end();
-});
+}
