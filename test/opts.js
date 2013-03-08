@@ -20,7 +20,7 @@ test('1st-arg options', function (t) {
 function check (t, port) {
     var r = hyperquest(
         { uri: 'http://localhost:' + port },
-        function (res) {
+        function (err, res) {
             t.equal(res.headers['content-type'], 'text/robot-speak');
         }
     );

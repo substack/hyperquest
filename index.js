@@ -8,8 +8,8 @@ module.exports = hyperquest;
 
 function hyperquest (uri, opts, cb, extra) {
     if (typeof uri === 'object') {
-        opts = uri;
         cb = opts;
+        opts = uri;
         uri = undefined;
     }
     if (!opts) opts = {};
