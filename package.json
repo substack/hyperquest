@@ -1,0 +1,39 @@
+{
+    "name": "hreq",
+    "version": "0.0.0",
+    "description": "make streaming http requests",
+    "main": "index.js",
+    "dependencies": {
+        "through": "~2.2.0",
+        "duplexer": "~0.0.3"
+    },
+    "devDependencies": {
+        "tap": "~0.4.0"
+    },
+    "scripts": {
+        "test": "tap test/*.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/substack/hreq.git"
+    },
+    "homepage": "https://github.com/substack/hreq",
+    "keywords": [
+        "stream",
+        "http",
+        "transport",
+        "request",
+        "get",
+        "post",
+        "put",
+        "delete",
+        "duplex",
+        "pooling"
+    ],
+    "author": {
+        "name": "James Halliday",
+        "email": "mail@substack.net",
+        "url": "http://substack.net"
+    },
+    "license": "MIT"
+}
