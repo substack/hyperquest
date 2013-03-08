@@ -6,7 +6,7 @@ var through = require('through');
 var server = http.createServer(function (req, res) {
     req.pipe(through(function (buf) {
         this.queue(String(buf).toUpperCase());
-    }));
+    })).pipe(res);
 });
 
 test('post', function (t) {
@@ -19,7 +19,7 @@ test('post', function (t) {
 });
 
 function check (t, port) {
-    var r = hyperquest('http://localhost:' + port);
+    var r = hyperquest.post('http://localhost:' + port);
     r.pipe(through(write, end));
     
     setTimeout(function () {
@@ -33,6 +33,6 @@ function check (t, port) {
     var data = '';
     function write (buf) { data += buf }
     function end () {
-        t.equal(data, 'BEEP BOOP');
+        t.equal(data, 'BEEP BOOP.');
     }
 }

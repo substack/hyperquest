@@ -4,7 +4,9 @@ var through = require('through');
 var duplexer = require('duplexer');
 var Stream = require('stream');
 
-module.exports = function (uri, opts, cb) {
+module.exports = hyperquest;
+
+function hyperquest (uri, opts, cb, extra) {
     if (typeof uri === 'object') {
         opts = uri;
         cb = opts;
@@ -12,11 +14,14 @@ module.exports = function (uri, opts, cb) {
     }
     if (!opts) opts = {};
     if (uri !== undefined) opts.uri = uri;
+    if (extra) opts.method = extra.method;
     
     var req = new Req(opts);
+    var ws = req.duplex && through();
+    if (ws) ws.pause();
     var rs = through();
     
-    var dup = req.duplex ? duplexer(req, rs) : rs;
+    var dup = req.duplex ? duplexer(ws, rs) : rs;
     if (!req.duplex) {
         rs.writable = false;
     }
@@ -26,8 +31,10 @@ module.exports = function (uri, opts, cb) {
     dup.on('close', function () { closed = true });
     
     process.nextTick(function () {
-        if (closed) return;
-        dup.on('close', function () { r.destroy() });
+        if (!req.duplex) {
+            if (closed) return;
+            dup.on('close', function () { r.destroy() });
+        }
         
         var r = req._send();
         r.on('error', dup.emit.bind(dup, 'error'));
@@ -42,7 +49,11 @@ module.exports = function (uri, opts, cb) {
             }
         });
         
-        if (!req.duplex) r.end();
+        if (req.duplex) {
+            ws.pipe(r);
+            ws.resume();
+        }
+        else r.end();
     });
     
     if (cb) {
@@ -50,6 +61,20 @@ module.exports = function (uri, opts, cb) {
         dup.on('response', cb.bind(dup, null));
     }
     return dup;
+}
+
+hyperquest.get = hyperquest;
+
+hyperquest.post = function (uri, opts, cb) {
+    return hyperquest(uri, opts, cb, { method: 'POST' });
+};
+
+hyperquest.put = function (uri, opts, cb) {
+    return hyperquest(uri, opts, cb, { method: 'PUT' });
+};
+
+hyperquest.delete = function (uri, opts, cb) {
+    return hyperquest(uri, opts, cb, { method: 'DELETE' });
 };
 
 function Req (opts) {
