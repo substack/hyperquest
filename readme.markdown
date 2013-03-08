@@ -35,6 +35,133 @@ $ node example/req.js
 beep boop
 ```
 
+# pooling is evil
+
+Now to drive the point home about pooling being evil and almost always never
+what you want ever.
+
+[request](https://github.com/mikeal/request)
+has its own forever agent thing that works pretty much the same as node core
+http.request: the wrong, horrible, broken way.
+
+For instance, the following request code takes 12+ seconds to finish:
+
+``` js
+var http = require('http');
+var request = require('request');
+
+var server = http.createServer(function (req, res) {
+    res.write(req.url.slice(1) + '\n');
+    setTimeout(res.end.bind(res), 3000);
+});
+
+server.listen(5000, function () {
+    var pending = 20;
+    for (var i = 0; i < 20; i++) {
+        var r = request('http://localhost:5000/' + i);
+        r.pipe(process.stdout, { end: false });
+        r.on('end', function () {
+            if (--pending === 0) server.close();
+        });
+    }
+});
+
+process.stdout.setMaxListeners(0); // turn off annoying warnings
+```
+
+```
+substack : example $ time node many_request.js 
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+real    0m12.423s
+user    0m0.424s
+sys 0m0.048s
+```
+
+Surprising? YES. This is pretty much never what you want, particularly if you
+have a lot of streaming http API endpoints. Your code will just *HANG* once the
+connection pool fills up and it won't start working again until some connections
+die for whatever reason. I have encountered this so many times in production
+instances and it is SO hard to track down reliably.
+
+Compare to using hreq, which is exactly the same code but it takes 3 seconds
+instead of 12 to finish because it's not completely self-cripped like
+request and core http.request.
+
+``` js
+var http = require('http');
+var hreq = require('hreq');
+
+var server = http.createServer(function (req, res) {
+    res.write(req.url.slice(1) + '\n');
+    setTimeout(res.end.bind(res), 3000);
+});
+
+server.listen(5000, function () {
+    var pending = 20;
+    for (var i = 0; i < 20; i++) {
+        var r = hreq('http://localhost:5000/' + i);
+        r.pipe(process.stdout, { end: false });
+        r.on('end', function () {
+            if (--pending === 0) server.close();
+        });
+    }
+});
+
+process.stdout.setMaxListeners(0); // turn off annoying warnings
+```
+```
+$ time node many_hreq.js 
+0
+1
+2
+3
+4
+5
+6
+8
+9
+7
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+real    0m3.284s
+user    0m0.288s
+sys 0m0.060s
+```
+
+So the other thing is, the justification I've heard supporting this horrible
+limit-of-5 pooling behavior is "performance". The first example which has been
+tuned for "performance" takes 12 seconds. The second example that removes these
+"performance" enhancements takes 3. Some performance improvement INDEED!
+
 # methods
 
 ``` js
