@@ -31,10 +31,8 @@ function hyperquest (uri, opts, cb, extra) {
     dup.on('close', function () { closed = true });
     
     process.nextTick(function () {
-        if (!req.duplex) {
-            if (closed) return;
-            dup.on('close', function () { r.destroy() });
-        }
+        if (closed) return;
+        dup.on('close', function () { r.destroy() });
         
         var r = req._send();
         r.on('error', dup.emit.bind(dup, 'error'));
