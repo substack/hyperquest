@@ -8,6 +8,8 @@ The hyperquest api is a subset of [request](https://github.com/mikeal/request).
 
 # rant
 
+![animated gif rant](http://substack.net/images/substack.gif)
+
 This module disables a lot of infuriating things about core http that WILL cause
 bugs in your application if you think of http as just another kind of stream:
 
