@@ -3,10 +3,8 @@ var http = require('http');
 var hreq = require('../');
 var through = require('through');
 
-var pending = [];
 var server = http.createServer(function (req, res) {
     res.write('beep boop');
-    pending.push(res);
 });
 
 test('more than 5 pending connections', function (t) {
