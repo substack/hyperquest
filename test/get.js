@@ -1,6 +1,6 @@
 var test = require('tap').test;
 var http = require('http');
-var hreq = require('../');
+var hyperquest = require('../');
 var through = require('through');
 
 var server = http.createServer(function (req, res) {
@@ -18,7 +18,7 @@ test('get', function (t) {
 });
 
 function check (t, port) {
-    var r = hreq('http://localhost:' + port);
+    var r = hyperquest('http://localhost:' + port);
     r.pipe(through(write, end));
     
     r.on('response', function (res) {

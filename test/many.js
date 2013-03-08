@@ -1,6 +1,6 @@
 var test = require('tap').test;
 var http = require('http');
-var hreq = require('../');
+var hyperquest = require('../');
 var through = require('through');
 
 var server = http.createServer(function (req, res) {
@@ -23,7 +23,7 @@ test('more than 5 pending connections', function (t) {
 });
 
 function check (t, port) {
-    var r = hreq('http://localhost:' + port);
+    var r = hyperquest('http://localhost:' + port);
     var data = '';
     r.pipe(through(function (buf) { data += buf }));
     

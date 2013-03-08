@@ -1,5 +1,5 @@
 {
-    "name": "hreq",
+    "name": "hyperquest",
     "version": "0.0.0",
     "description": "make streaming http requests",
     "main": "index.js",
@@ -15,9 +15,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/substack/hreq.git"
+        "url": "git://github.com/substack/hyperquest.git"
     },
-    "homepage": "https://github.com/substack/hreq",
+    "homepage": "https://github.com/substack/hyperquest",
     "keywords": [
         "stream",
         "http",

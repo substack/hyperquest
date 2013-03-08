@@ -1,8 +1,8 @@
-# hreq
+# hyperquest
 
 treat http requests as a streaming transport
 
-The hreq api is a subset of [request](https://github.com/mikeal/request).
+The hyperquest api is a subset of [request](https://github.com/mikeal/request).
 
 # rant
 
@@ -16,8 +16,9 @@ http.
 * There is a default connection pool of 5 requests. If you have 5 or more extant
 http requests, any additional requests will HANG for NO GOOD REASON.
 
-hreq turns these annoyances off so you can just pretend that core http is just a
-fancier version of tcp and not the horrible monstrosity that it actually is.
+hyperquest turns these annoyances off so you can just pretend that core http is
+just a fancier version of tcp and not the horrible monstrosity that it actually
+is.
 
 I have it on good authority that these annoyances will be fixed in node 0.10.
 
@@ -26,8 +27,8 @@ I have it on good authority that these annoyances will be fixed in node 0.10.
 # simple streaming GET
 
 ``` js
-var hreq = require('hreq');
-hreq('http://localhost:8000').pipe(process.stdout);
+var hyperquest = require('hyperquest');
+hyperquest('http://localhost:8000').pipe(process.stdout);
 ```
 
 ```
@@ -103,13 +104,13 @@ connection pool fills up and it won't start working again until some connections
 die for whatever reason. I have encountered this so many times in production
 instances and it is SO hard to track down reliably.
 
-Compare to using hreq, which is exactly the same code but it takes 3 seconds
-instead of 12 to finish because it's not completely self-cripped like
+Compare to using hyperquest, which is exactly the same code but it takes 3
+seconds instead of 12 to finish because it's not completely self-cripped like
 request and core http.request.
 
 ``` js
 var http = require('http');
-var hreq = require('hreq');
+var hyperquest = require('hyperquest');
 
 var server = http.createServer(function (req, res) {
     res.write(req.url.slice(1) + '\n');
@@ -119,7 +120,7 @@ var server = http.createServer(function (req, res) {
 server.listen(5000, function () {
     var pending = 20;
     for (var i = 0; i < 20; i++) {
-        var r = hreq('http://localhost:5000/' + i);
+        var r = hyperquest('http://localhost:5000/' + i);
         r.pipe(process.stdout, { end: false });
         r.on('end', function () {
             if (--pending === 0) server.close();
@@ -130,7 +131,7 @@ server.listen(5000, function () {
 process.stdout.setMaxListeners(0); // turn off annoying warnings
 ```
 ```
-$ time node many_hreq.js 
+$ time node many_hyperquest.js 
 0
 1
 2
@@ -165,10 +166,10 @@ tuned for "performance" takes 12 seconds. The second example that removes these
 # methods
 
 ``` js
-var hreq = require('hreq');
+var hyperquest = require('hyperquest');
 ```
 
-## var req = hreq(uri, opts={}, cb)
+## var req = hyperquest(uri, opts={}, cb)
 
 Create an outgoing http request to `uri` or `opts.uri`.
 You need not pass any arguments here since there are setter methods documented
@@ -195,23 +196,23 @@ Set an outgoing header `key` to `value`.
 
 ## req.setLocation(uri);
 
-Set the location if you didn't specify it in the `hreq()` call.
+Set the location if you didn't specify it in the `hyperquest()` call.
 
-## var req = hreq.get(uri, opts, cb)
+## var req = hyperquest.get(uri, opts, cb)
 
-Return a readable stream from `hreq(..., { method: 'GET' })`.
+Return a readable stream from `hyperquest(..., { method: 'GET' })`.
 
-## var req = hreq.put(uri, opts, cb)
+## var req = hyperquest.put(uri, opts, cb)
 
-Return a duplex stream from `hreq(..., { method: 'PUT' })`.
+Return a duplex stream from `hyperquest(..., { method: 'PUT' })`.
 
-## var req = hreq.post(uri, opts, cb)
+## var req = hyperquest.post(uri, opts, cb)
 
-Return a duplex stream from `hreq(..., { method: 'POST' })`.
+Return a duplex stream from `hyperquest(..., { method: 'POST' })`.
 
-## var req = hreq.delete(uri, opts, cb)
+## var req = hyperquest.delete(uri, opts, cb)
 
-Return a readable stream from `hreq(..., { method: 'DELETE' })`.
+Return a readable stream from `hyperquest(..., { method: 'DELETE' })`.
 
 # events
 
@@ -228,7 +229,7 @@ The `'error'` event is forwarded from the underlying `http.request()`.
 With [npm](https://npmjs.org) do:
 
 ```
-npm install hreq
+npm install hyperquest
 ```
 
 # license
