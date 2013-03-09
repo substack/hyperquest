@@ -104,7 +104,7 @@ Req.prototype._send = function () {
         headers: headers
     });
     
-    req.setTimeout(Math.pow(2, 32) * 1000);
+    if (req.setTimeout) req.setTimeout(Math.pow(2, 32) * 1000);
     return req;
 };
 
