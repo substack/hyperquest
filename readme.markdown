@@ -6,6 +6,8 @@ treat http requests as a streaming transport
 
 The hyperquest api is a subset of [request](https://github.com/mikeal/request).
 
+This module works in the browser with [browserify](http://browserify.org).
+
 # rant
 
 ![animated gif rant](http://substack.net/images/substack.gif)
