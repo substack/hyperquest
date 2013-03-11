@@ -1,5 +1,6 @@
 var url = require('url');
 var http = require('http');
+var https = require('https');
 var through = require('through');
 var duplexer = require('duplexer');
 var Stream = require('stream');
@@ -95,7 +96,9 @@ Req.prototype._send = function () {
     if (u.auth) {
         headers.authorization = 'Basic ' + Buffer(u.auth).toString('base64');
     }
-    var req = http.request({
+    
+    var interface = (u.protocol === 'https:') ? https : http;
+    var req = interface.request({
         method: this.method,
         host: u.hostname,
         port: Number(u.port),
