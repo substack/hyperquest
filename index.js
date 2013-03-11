@@ -29,6 +29,7 @@ function hyperquest (uri, opts, cb, extra) {
     dup.request = req;
     dup.setHeader = req.setHeader.bind(req);
     dup.setLocation = req.setLocation.bind(req);
+    dup.setBody = req.setBody.bind(req);
     
     var closed = false;
     dup.on('close', function () { closed = true });
@@ -50,6 +51,8 @@ function hyperquest (uri, opts, cb, extra) {
             }
         });
         
+        if (opts.body) r.write(opts.body);
+
         if (req.duplex) {
             ws.pipe(r);
             ws.resume();
@@ -86,6 +89,7 @@ function Req (opts) {
     this.duplex = !(method === 'GET' || method === 'DELETE');
     
     if (opts.uri) this.setLocation(opts.uri);
+    if (opts.body) this.setBody(opts.body);
 }
 
 Req.prototype._send = function () {
@@ -97,6 +101,8 @@ Req.prototype._send = function () {
         headers.authorization = 'Basic ' + Buffer(u.auth).toString('base64');
     }
     
+    if (this.body) headers['content-length'] = this.body.length;
+
     var interface = (u.protocol === 'https:') ? https : http;
     var req = interface.request({
         method: this.method,
@@ -119,5 +125,10 @@ Req.prototype.setHeader = function (key, value) {
 
 Req.prototype.setLocation = function (uri) {
     this.uri = uri;
+    return this;
+};
+
+Req.prototype.setBody = function (body) {
+    this.body = body;
     return this;
 };
