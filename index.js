@@ -84,7 +84,10 @@ function Req (opts) {
     var method = (opts.method || 'GET').toUpperCase();
     this.method = method;
     this.duplex = !(method === 'GET' || method === 'DELETE');
-    
+
+    if (opts.auth) {
+        this.headers.authorization = 'Basic ' + toBase64(this.auth.user + ':' + this.auth.pass);
+    }
     if (opts.uri) this.setLocation(opts.uri);
 }
 
