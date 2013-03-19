@@ -26,7 +26,7 @@ hyperquest turns these annoyances off so you can just pretend that core http is
 just a fancier version of tcp and not the horrible monstrosity that it actually
 is.
 
-I have it on good authority that these annoyances will be fixed in node 0.10.
+I have it on good authority that these annoyances will be fixed in node 0.12.
 
 # example
 
