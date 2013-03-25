@@ -111,7 +111,7 @@ die for whatever reason. I have encountered this so many times in production
 instances and it is SO hard to track down reliably.
 
 Compare to using hyperquest, which is exactly the same code but it takes 3
-seconds instead of 12 to finish because it's not completely self-cripped like
+seconds instead of 12 to finish because it's not completely self-crippled like
 request and core http.request.
 
 ``` js
