@@ -7,6 +7,14 @@ var Stream = require('stream');
 
 module.exports = hyperquest;
 
+function bind (obj, fn) {
+  var args = Array.prototype.slice.call(arguments, 2);
+  return function () {
+    args = args.concat(Array.prototype.slice.call(arguments));
+    return fn.apply(obj, args);
+  }
+}
+
 function hyperquest (uri, opts, cb, extra) {
     if (typeof uri === 'object') {
         cb = opts;
@@ -27,8 +35,8 @@ function hyperquest (uri, opts, cb, extra) {
         rs.writable = false;
     }
     dup.request = req;
-    dup.setHeader = req.setHeader.bind(req);
-    dup.setLocation = req.setLocation.bind(req);
+    dup.setHeader = bind(req, req.setHeader);
+    dup.setLocation = bind(req, req.setLocation);
     
     var closed = false;
     dup.on('close', function () { closed = true });
@@ -38,7 +46,7 @@ function hyperquest (uri, opts, cb, extra) {
         dup.on('close', function () { r.destroy() });
         
         var r = req._send();
-        r.on('error', dup.emit.bind(dup, 'error'));
+        r.on('error', bind(dup, dup.emit, 'error'));
         
         r.on('response', function (res) {
             dup.response = res;
@@ -59,7 +67,7 @@ function hyperquest (uri, opts, cb, extra) {
     
     if (cb) {
         dup.on('error', cb);
-        dup.on('response', cb.bind(dup, null));
+        dup.on('response', bind(dup, cb, null));
     }
     return dup;
 }
@@ -74,7 +82,7 @@ hyperquest.put = function (uri, opts, cb) {
     return hyperquest(uri, opts, cb, { method: 'PUT' });
 };
 
-hyperquest.delete = function (uri, opts, cb) {
+hyperquest['delete'] = function (uri, opts, cb) {
     return hyperquest(uri, opts, cb, { method: 'DELETE' });
 };
 
