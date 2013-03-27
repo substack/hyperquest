@@ -221,7 +221,7 @@ Return a duplex stream from `hyperquest(..., { method: 'PUT' })`.
 
 Return a duplex stream from `hyperquest(..., { method: 'POST' })`.
 
-## var req = hyperquest.delete(uri, opts, cb)
+## var req = hyperquest.del(uri, opts, cb)
 
 Return a readable stream from `hyperquest(..., { method: 'DELETE' })`.
 

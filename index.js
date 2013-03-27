@@ -74,7 +74,7 @@ hyperquest.put = function (uri, opts, cb) {
     return hyperquest(uri, opts, cb, { method: 'PUT' });
 };
 
-hyperquest.delete = function (uri, opts, cb) {
+hyperquest.del = function (uri, opts, cb) {
     return hyperquest(uri, opts, cb, { method: 'DELETE' });
 };
 
