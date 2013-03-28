@@ -188,7 +188,8 @@ Default option values:
 * opts.method - `"GET"`
 * opts.headers - `{}`
 * opts.auth - undefined, but is set automatically when the `uri` has an auth
-string in it such as `"http://user:passwd@host"`.
+string in it such as `"http://user:passwd@host"`. `opts.auth` is of the form
+`"user:pass"`, just like `http.request()`.
 
 The request does not go through until the `nextTick` so you can set values
 outside of the `opts` so long as they are called on the same tick.
