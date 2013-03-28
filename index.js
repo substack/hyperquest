@@ -92,6 +92,7 @@ function Req (opts) {
     var method = (opts.method || 'GET').toUpperCase();
     this.method = method;
     this.duplex = !(method === 'GET' || method === 'DELETE');
+    this.auth = opts.auth;
     
     if (opts.uri) this.setLocation(opts.uri);
 }
@@ -101,8 +102,9 @@ Req.prototype._send = function () {
     
     var headers = this.headers || {};
     var u = url.parse(this.uri);
-    if (u.auth) {
-        headers.authorization = 'Basic ' + Buffer(u.auth).toString('base64');
+    var au = u.auth || this.auth;
+    if (au) {
+        headers.authorization = 'Basic ' + Buffer(au).toString('base64');
     }
     
     var interface = (u.protocol === 'https:') ? https : http;
