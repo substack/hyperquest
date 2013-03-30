@@ -21,6 +21,10 @@ function hyperquest (uri, opts, cb, extra) {
         opts = uri;
         uri = undefined;
     }
+    if (typeof opts === 'function') {
+      cb = opts;
+      opts = undefined;
+    }
     if (!opts) opts = {};
     if (uri !== undefined) opts.uri = uri;
     if (extra) opts.method = extra.method;
