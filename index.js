@@ -111,8 +111,10 @@ Req.prototype._send = function () {
         headers.authorization = 'Basic ' + Buffer(au).toString('base64');
     }
     
-    var interface = (u.protocol === 'https:') ? https : http;
-    var req = interface.request({
+    var protocol = u.protocol || '';
+    var iface = protocol === 'https:' ? https : http; 
+    var req = iface.request({
+        scheme: protocol.replace(/:$/, ''),
         method: this.method,
         host: u.hostname,
         port: Number(u.port),
