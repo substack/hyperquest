@@ -10,8 +10,8 @@ module.exports = hyperquest;
 function bind (obj, fn) {
   var args = Array.prototype.slice.call(arguments, 2);
   return function () {
-    args = args.concat(Array.prototype.slice.call(arguments));
-    return fn.apply(obj, args);
+    var argv = args.concat(Array.prototype.slice.call(arguments));
+    return fn.apply(obj, argv);
   }
 }
 
