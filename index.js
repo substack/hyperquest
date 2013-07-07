@@ -3,7 +3,6 @@ var http = require('http');
 var https = require('https');
 var through = require('through');
 var duplexer = require('duplexer');
-var Stream = require('stream');
 
 module.exports = hyperquest;
 
