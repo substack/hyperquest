@@ -3,15 +3,14 @@ var http = require('http');
 var https = require('https');
 var through = require('through');
 var duplexer = require('duplexer');
-var Stream = require('stream');
 
 module.exports = hyperquest;
 
 function bind (obj, fn) {
   var args = Array.prototype.slice.call(arguments, 2);
   return function () {
-    args = args.concat(Array.prototype.slice.call(arguments));
-    return fn.apply(obj, args);
+    var argv = args.concat(Array.prototype.slice.call(arguments));
+    return fn.apply(obj, argv);
   }
 }
 
@@ -112,8 +111,10 @@ Req.prototype._send = function () {
         headers.authorization = 'Basic ' + Buffer(au).toString('base64');
     }
     
-    var interface = (u.protocol === 'https:') ? https : http;
-    var req = interface.request({
+    var protocol = u.protocol || '';
+    var iface = protocol === 'https:' ? https : http; 
+    var req = iface.request({
+        scheme: protocol.replace(/:$/, ''),
         method: this.method,
         host: u.hostname,
         port: Number(u.port),
