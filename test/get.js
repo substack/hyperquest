@@ -21,6 +21,10 @@ function check (t, port) {
     var r = hyperquest('http://localhost:' + port);
     r.pipe(through(write, end));
     
+    r.on('request', function (req) {
+        t.ok(req);
+    });
+    
     r.on('response', function (res) {
         t.equal(res.headers['content-type'], 'text/robot-speak');
     });
