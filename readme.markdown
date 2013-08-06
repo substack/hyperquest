@@ -228,6 +228,11 @@ Return a readable stream from `hyperquest(..., { method: 'DELETE' })`.
 
 # events
 
+## req.on('request', function (req) {})
+
+The `'request'` event is fired with the *ClientRequest* object created
+as a result of the underlying `http.request()` call.
+
 ## req.on('response', function (res) {})
 
 The `'response'` event is forwarded from the underlying `http.request()`.
