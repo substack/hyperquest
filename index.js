@@ -96,7 +96,8 @@ function Req (opts) {
     this.method = method;
     this.duplex = !(method === 'GET' || method === 'DELETE'
         || method === 'HEAD');
-    this.auth = opts.auth; 
+    this.auth = opts.auth;
+    this.rejectUnauthorized = opts.rejectUnauthorized == null ? true : opts.rejectUnauthorized;
     
     if (opts.uri) this.setLocation(opts.uri);
 }
@@ -110,9 +111,10 @@ Req.prototype._send = function () {
     if (au) {
         headers.authorization = 'Basic ' + Buffer(au).toString('base64');
     }
+    var rejectUnauthorized = this.rejectUnauthorized;
     
     var protocol = u.protocol || '';
-    var iface = protocol === 'https:' ? https : http; 
+    var iface = protocol === 'https:' ? https : http;
     var req = iface.request({
         scheme: protocol.replace(/:$/, ''),
         method: this.method,
@@ -120,7 +122,8 @@ Req.prototype._send = function () {
         port: Number(u.port) || (protocol === 'https' ? 443 : 80),
         path: u.path,
         agent: false,
-        headers: headers
+        headers: headers,
+        rejectUnauthorized: rejectUnauthorized
     });
     
     if (req.setTimeout) req.setTimeout(Math.pow(2, 32) * 1000);
