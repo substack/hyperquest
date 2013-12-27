@@ -97,7 +97,7 @@ function Req (opts) {
     this.duplex = !(method === 'GET' || method === 'DELETE'
         || method === 'HEAD');
     this.auth = opts.auth;
-    this.rejectUnauthorized = opts.rejectUnauthorized == null ? true : opts.rejectUnauthorized;
+    this.rejectUnauthorized = opts.rejectUnauthorized === false ? false : true;
     
     if (opts.uri) this.setLocation(opts.uri);
 }
@@ -111,7 +111,6 @@ Req.prototype._send = function () {
     if (au) {
         headers.authorization = 'Basic ' + Buffer(au).toString('base64');
     }
-    var rejectUnauthorized = this.rejectUnauthorized;
     
     var protocol = u.protocol || '';
     var iface = protocol === 'https:' ? https : http;
@@ -123,7 +122,7 @@ Req.prototype._send = function () {
         path: u.path,
         agent: false,
         headers: headers,
-        rejectUnauthorized: rejectUnauthorized
+        rejectUnauthorized: this.rejectUnauthorized
     });
     
     if (req.setTimeout) req.setTimeout(Math.pow(2, 32) * 1000);
