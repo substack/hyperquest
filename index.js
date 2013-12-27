@@ -97,7 +97,8 @@ function Req (opts) {
     this.duplex = !(method === 'GET' || method === 'DELETE'
         || method === 'HEAD');
     this.auth = opts.auth;
-    this.rejectUnauthorized = opts.rejectUnauthorized === false ? false : true;
+    
+    this.options = opts;
     
     if (opts.uri) this.setLocation(opts.uri);
 }
@@ -114,16 +115,25 @@ Req.prototype._send = function () {
     
     var protocol = u.protocol || '';
     var iface = protocol === 'https:' ? https : http;
-    var req = iface.request({
+    var opts = {
         scheme: protocol.replace(/:$/, ''),
         method: this.method,
         host: u.hostname,
         port: Number(u.port) || (protocol === 'https' ? 443 : 80),
         path: u.path,
         agent: false,
-        headers: headers,
-        rejectUnauthorized: this.rejectUnauthorized
-    });
+        headers: headers
+    };
+    if (protocol === 'https:') {
+        opts.pfx = this.options.pfx;
+        opts.key = this.options.key;
+        opts.cert = this.options.cert;
+        opts.ca = this.options.ca;
+        opts.ciphers = this.options.ciphers;
+        opts.rejectUnauthorized = this.options.rejectUnauthorized;
+        opts.secureProtocol = this.options.secureProtocol;
+    }
+    var req = iface.request(opts);
     
     if (req.setTimeout) req.setTimeout(Math.pow(2, 32) * 1000);
     return req;
