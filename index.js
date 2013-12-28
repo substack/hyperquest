@@ -119,7 +119,7 @@ Req.prototype._send = function () {
         scheme: protocol.replace(/:$/, ''),
         method: this.method,
         host: u.hostname,
-        port: Number(u.port) || (protocol === 'https' ? 443 : 80),
+        port: Number(u.port) || (protocol === 'https:' ? 443 : 80),
         path: u.path,
         agent: false,
         headers: headers
