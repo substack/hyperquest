@@ -122,7 +122,8 @@ Req.prototype._send = function () {
         port: Number(u.port) || (protocol === 'https:' ? 443 : 80),
         path: u.path,
         agent: false,
-        headers: headers
+        headers: headers,
+        withCredentials: this.options.withCredentials
     };
     if (protocol === 'https:') {
         opts.pfx = this.options.pfx;
