@@ -136,8 +136,13 @@ Req.prototype._send = function () {
     }
     var req = iface.request(opts);
     
-    var timeout = this.options.timeout ? this.options.timeout : Math.pow(2, 32) * 1000;
-    if (req.setTimeout) req.setTimeout(timeout);
+    if (req.setTimeout) {
+        var timeout = this.options.timeout ? this.options.timeout : Math.pow(2, 32) * 1000;
+        var timeoutCallback = this.options.timeoutCallback;
+        req.setTimeout(timeout, function() {
+            if (timeoutCallback) timeoutCallback(req);
+        });
+    }
     return req;
 };
 
