@@ -242,7 +242,7 @@ Return a readable stream from `hyperquest(..., { method: 'DELETE' })`.
 
 The `'response'` event is forwarded from the underlying `http.request()`.
 
-## req.on('error', function (res) {})
+## req.on('error', function (err) {})
 
 The `'error'` event is forwarded from the underlying `http.request()`.
 
