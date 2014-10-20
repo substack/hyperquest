@@ -7,11 +7,11 @@ var duplexer = require('duplexer2');
 module.exports = hyperquest;
 
 function bind (obj, fn) {
-  var args = Array.prototype.slice.call(arguments, 2);
-  return function () {
-    var argv = args.concat(Array.prototype.slice.call(arguments));
-    return fn.apply(obj, argv);
-  }
+    var args = Array.prototype.slice.call(arguments, 2);
+    return function () {
+        var argv = args.concat(Array.prototype.slice.call(arguments));
+        return fn.apply(obj, argv);
+    }
 }
 
 function hyperquest (uri, opts, cb, extra) {
