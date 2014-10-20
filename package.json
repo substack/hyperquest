@@ -4,15 +4,14 @@
   "description": "make streaming http requests",
   "main": "index.js",
   "dependencies": {
-    "duplexer": "~0.1.0",
-    "through": "~2.2.0",
-    "through2": "^0.6.3"
+    "duplexer2": "~0.0.2",
+    "through2": "~0.6.3"
   },
   "devDependencies": {
-    "tap": "~0.4.0"
+    "tape": "^3.0.1"
   },
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",
