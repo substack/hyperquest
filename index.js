@@ -1,7 +1,7 @@
 var url = require('url');
 var http = require('http');
 var https = require('https');
-var through = require('through');
+var through = require('through2');
 var duplexer = require('duplexer');
 
 module.exports = hyperquest;
@@ -30,7 +30,6 @@ function hyperquest (uri, opts, cb, extra) {
     
     var req = new Req(opts);
     var ws = req.duplex && through();
-    if (ws) ws.pause();
     var rs = through();
     
     var dup = req.duplex ? duplexer(ws, rs) : rs;
@@ -56,14 +55,13 @@ function hyperquest (uri, opts, cb, extra) {
             dup.emit('response', res);
             if (req.duplex) res.pipe(rs)
             else {
-                res.on('data', function (buf) { rs.queue(buf) });
-                res.on('end', function () { rs.queue(null) });
+                res.on('data', function (buf) { rs.push(buf) });
+                res.on('end', function () { rs.push(null) });
             }
         });
         
         if (req.duplex) {
             ws.pipe(r);
-            ws.resume();
         }
         else r.end();
     });
