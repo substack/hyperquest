@@ -190,6 +190,7 @@ Default option values:
 * opts.auth - undefined, but is set automatically when the `uri` has an auth
 string in it such as `"http://user:passwd@host"`. `opts.auth` is of the form
 `"user:pass"`, just like `http.request()`.
+* opts.timeout - Timeout after this many milliseconds of idle time.  Default 10000. 0 to never timeout. See [socket.setTimeout()](http://nodejs.org/api/net.html#net_socket_settimeout_timeout_callback) for more info.
 
 In https mode, you can specify options to the underlying `tls.connect()` call:
 
