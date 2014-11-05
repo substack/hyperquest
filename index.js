@@ -94,8 +94,7 @@ function Req (opts) {
 
     var method = (opts.method || 'GET').toUpperCase();
     this.method = method;
-    this.duplex = !(method === 'GET' || method === 'DELETE'
-    || method === 'HEAD');
+    this.duplex = !(method === 'GET' || method === 'DELETE' || method === 'HEAD');
     this.auth = opts.auth;
 
     this.options = opts;
