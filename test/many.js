@@ -1,7 +1,7 @@
-var test = require('tap').test;
+var test = require('tape');
 var http = require('http');
 var hyperquest = require('../');
-var through = require('through');
+var through = require('through2');
 
 var server = http.createServer(function (req, res) {
     res.write('beep boop');
@@ -25,7 +25,7 @@ test('more than 5 pending connections', function (t) {
 function check (t, port) {
     var r = hyperquest('http://localhost:' + port);
     var data = '';
-    r.pipe(through(function (buf) { data += buf }));
+    r.pipe(through(function (buf, enc, cb) { data += buf; cb() }));
     
     setTimeout(function () {
         t.equal(data, 'beep boop');

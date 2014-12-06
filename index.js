@@ -1,17 +1,17 @@
 var url = require('url');
 var http = require('http');
 var https = require('https');
-var through = require('through');
-var duplexer = require('duplexer');
+var through = require('through2');
+var duplexer = require('duplexer2');
 
 module.exports = hyperquest;
 
 function bind (obj, fn) {
-  var args = Array.prototype.slice.call(arguments, 2);
-  return function () {
-    var argv = args.concat(Array.prototype.slice.call(arguments));
-    return fn.apply(obj, argv);
-  }
+    var args = Array.prototype.slice.call(arguments, 2);
+    return function () {
+        var argv = args.concat(Array.prototype.slice.call(arguments));
+        return fn.apply(obj, argv);
+    }
 }
 
 function hyperquest (uri, opts, cb, extra) {
@@ -30,7 +30,6 @@ function hyperquest (uri, opts, cb, extra) {
     
     var req = new Req(opts);
     var ws = req.duplex && through();
-    if (ws) ws.pause();
     var rs = through();
     
     var dup = req.duplex ? duplexer(ws, rs) : rs;
@@ -57,14 +56,13 @@ function hyperquest (uri, opts, cb, extra) {
             dup.emit('response', res);
             if (req.duplex) res.pipe(rs)
             else {
-                res.on('data', function (buf) { rs.queue(buf) });
-                res.on('end', function () { rs.queue(null) });
+                res.on('data', function (buf) { rs.push(buf) });
+                res.on('end', function () { rs.push(null) });
             }
         });
         
         if (req.duplex) {
             ws.pipe(r);
-            ws.resume();
         }
         else r.end();
     });
@@ -95,8 +93,11 @@ function Req (opts) {
     
     var method = (opts.method || 'GET').toUpperCase();
     this.method = method;
-    this.duplex = !(method === 'GET' || method === 'DELETE');
+    this.duplex = !(method === 'GET' || method === 'DELETE'
+        || method === 'HEAD');
     this.auth = opts.auth;
+    
+    this.options = opts;
     
     if (opts.uri) this.setLocation(opts.uri);
 }
@@ -112,16 +113,27 @@ Req.prototype._send = function () {
     }
     
     var protocol = u.protocol || '';
-    var iface = protocol === 'https:' ? https : http; 
-    var req = iface.request({
+    var iface = protocol === 'https:' ? https : http;
+    var opts = {
         scheme: protocol.replace(/:$/, ''),
         method: this.method,
         host: u.hostname,
-        port: Number(u.port),
+        port: Number(u.port) || (protocol === 'https:' ? 443 : 80),
         path: u.path,
         agent: false,
-        headers: headers
-    });
+        headers: headers,
+        withCredentials: this.options.withCredentials
+    };
+    if (protocol === 'https:') {
+        opts.pfx = this.options.pfx;
+        opts.key = this.options.key;
+        opts.cert = this.options.cert;
+        opts.ca = this.options.ca;
+        opts.ciphers = this.options.ciphers;
+        opts.rejectUnauthorized = this.options.rejectUnauthorized;
+        opts.secureProtocol = this.options.secureProtocol;
+    }
+    var req = iface.request(opts);
     
     if (req.setTimeout) req.setTimeout(Math.pow(2, 32) * 1000);
     return req;

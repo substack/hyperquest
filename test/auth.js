@@ -1,7 +1,6 @@
-var test = require('tap').test;
+var test = require('tape');
 var http = require('http');
 var hyperquest = require('../');
-var through = require('through');
 
 var server = http.createServer(function (req, res) {
     var au = req.headers.authorization;

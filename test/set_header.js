@@ -1,7 +1,7 @@
-var test = require('tap').test;
+var test = require('tape');
 var http = require('http');
 var hyperquest = require('../');
-var through = require('through');
+var through = require('through2');
 
 test('setHeader on a request', function (t) {
     t.plan(2);
@@ -23,7 +23,7 @@ function check (t, port) {
     r.pipe(through(write, end));
     
     var data = '';
-    function write (buf) { data += buf }
+    function write (buf, enc, cb) { data += buf; cb() }
     function end () {
         t.equal(data, 'beep boop');
     }

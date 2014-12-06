@@ -1,11 +1,12 @@
-var test = require('tap').test;
+var test = require('tape');
 var http = require('http');
 var hyperquest = require('../');
-var through = require('through');
+var through = require('through2');
 
 var server = http.createServer(function (req, res) {
-    req.pipe(through(function (buf) {
-        this.queue(String(buf).toUpperCase());
+    req.pipe(through(function (buf, enc, cb) {
+        this.push(String(buf).toUpperCase());
+        cb();
     })).pipe(res);
 });
 
