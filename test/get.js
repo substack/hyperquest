@@ -9,7 +9,7 @@ var server = http.createServer(function (req, res) {
 });
 
 test('get', function (t) {
-    t.plan(2);
+    t.plan(3);
     server.listen(0, function () {
         var port = server.address().port;
         check(t, port);
