@@ -190,6 +190,7 @@ Default option values:
 * opts.auth - undefined, but is set automatically when the `uri` has an auth
 string in it such as `"http://user:passwd@host"`. `opts.auth` is of the form
 `"user:pass"`, just like `http.request()`.
+* opts.agent - `false`
 
 In https mode, you can specify options to the underlying `tls.connect()` call:
 

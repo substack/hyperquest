@@ -119,7 +119,7 @@ Req.prototype._send = function () {
         host: u.hostname,
         port: Number(u.port) || (protocol === 'https:' ? 443 : 80),
         path: u.path,
-        agent: false,
+        agent: this.options.agent || false,
         headers: headers,
         withCredentials: this.options.withCredentials
     };
