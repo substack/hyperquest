@@ -9,7 +9,7 @@ var server = http.createServer(function (req, res) {
 });
 
 test('get', function (t) {
-    t.plan(2);
+    t.plan(3);
     server.listen(0, function () {
         var port = server.address().port;
         check(t, port);
@@ -20,6 +20,10 @@ test('get', function (t) {
 function check (t, port) {
     var r = hyperquest('http://localhost:' + port);
     r.pipe(through(write, end));
+    
+    r.on('request', function (req) {
+        t.ok(req);
+    });
     
     r.on('response', function (res) {
         t.equal(res.headers['content-type'], 'text/robot-speak');
