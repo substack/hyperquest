@@ -116,6 +116,7 @@ Req.prototype._send = function () {
     var iface = protocol === 'https:' ? https : http;
     var opts = {
         scheme: protocol.replace(/:$/, ''),
+        protocol: protocol,
         method: this.method,
         host: u.hostname,
         port: Number(u.port) || (protocol === 'https:' ? 443 : 80),
