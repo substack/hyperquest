@@ -134,8 +134,9 @@ Req.prototype._send = function () {
         opts.secureProtocol = this.options.secureProtocol;
     }
     var req = iface.request(opts);
-    
-    if (req.setTimeout) req.setTimeout(Math.pow(2, 32) * 1000);
+
+    var timeout = this.options.timeout || Math.pow(2, 32) * 1000;
+    if (req.setTimeout) req.setTimeout(timeout);
     return req;
 };
 
