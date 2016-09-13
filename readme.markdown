@@ -193,6 +193,8 @@ string in it such as `"http://user:passwd@host"`. `opts.auth` is of the form
 * opts.agent - `false`
 * opts.timeout - `Math.pow(2, 32) * 1000` The value is passed as an argument 
 to the underlying `req.setTimeout()` function. 
+* opts.localAddress - local interface to bind for network connections
+(Node.js only)
 
 In https mode, you can specify options to the underlying `tls.connect()` call:
 
