@@ -1,6 +1,6 @@
 {
   "name": "hyperquest",
-  "version": "1.3.0",
+  "version": "2.1.0",
   "description": "make streaming http requests",
   "main": "index.js",
   "dependencies": {
