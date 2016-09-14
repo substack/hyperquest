@@ -121,7 +121,8 @@ Req.prototype._send = function () {
         path: u.path,
         agent: this.options.agent || false,
         headers: headers,
-        withCredentials: this.options.withCredentials
+        withCredentials: this.options.withCredentials,
+        localAddress: this.options.localAddress
     };
     if (protocol === 'https:') {
         opts.pfx = this.options.pfx;
