@@ -108,7 +108,7 @@ Req.prototype._send = function () {
     var u = url.parse(this.uri);
     var au = u.auth || this.auth;
     if (au) {
-        headers.authorization = 'Basic ' + Buffer(au).toString('base64');
+        headers.authorization = 'Basic ' + new Buffer(au).toString('base64');
     }
     
     var protocol = u.protocol || '';

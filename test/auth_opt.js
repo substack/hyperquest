@@ -6,7 +6,7 @@ var server = http.createServer(function (req, res) {
     var au = req.headers.authorization;
     if (!au) return res.end('ACCESS DENIED');
     
-    var buf = Buffer(au.replace(/^Basic\s+/, ''), 'base64');
+    var buf = new Buffer(au.replace(/^Basic\s+/, ''), 'base64');
     var s = buf.toString().split(':');
     
     if (s[0] === 'moo' && s[1] === 'hax') {
