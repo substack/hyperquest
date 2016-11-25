@@ -29,6 +29,6 @@ function check (t, port) {
     
     setTimeout(function () {
         t.equal(data, 'beep boop');
-    }, 100);
+    }, 200);
     return  r;
 }

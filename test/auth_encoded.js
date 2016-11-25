@@ -1,12 +1,13 @@
 var test = require('tape');
 var http = require('http');
 var hyperquest = require('../');
+var bufferFrom = require('buffer-from');
 
 var server = http.createServer(function (req, res) {
     var au = req.headers.authorization;
     if (!au) return res.end('ACCESS DENIED');
     
-    var buf = new Buffer(au.replace(/^Basic\s+/, ''), 'base64');
+    var buf = bufferFrom(au.replace(/^Basic\s+/, ''), 'base64');
     var s = buf.toString().split(':');
     
     if (s[0] === 'm##' && s[1] === 'h@x') {
