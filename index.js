@@ -3,6 +3,7 @@ var http = require('http');
 var https = require('https');
 var through = require('through2');
 var duplexer = require('duplexer2');
+var bufferFrom = require('buffer-from');
 
 module.exports = hyperquest;
 
@@ -108,7 +109,7 @@ Req.prototype._send = function () {
     var u = url.parse(this.uri);
     var au = u.auth || this.auth;
     if (au) {
-        headers.authorization = 'Basic ' + new Buffer(au).toString('base64');
+        headers.authorization = 'Basic ' + bufferFrom(au).toString('base64');
     }
     
     var protocol = u.protocol || '';
