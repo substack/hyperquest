@@ -99,6 +99,10 @@ function Req (opts) {
     
     this.options = opts;
     
+    if (opts.auth) {
+        this.headers.authorization = 'Basic ' +
+            Buffer(opts.auth.user + ':' + opts.auth.pass).toString('base64');
+    }
     if (opts.uri) this.setLocation(opts.uri);
 }
 

@@ -19,12 +19,14 @@ var server = http.createServer(function (req, res) {
 });
 
 test('basic auth', function (t) {
-    t.plan(3);
+    t.plan(5);
     server.listen(0, function () {
         var port = server.address().port;
         checkUnauth(t, port);
         checkValid(t, port);
         checkInvalid(t, port);
+        checkValidObj(t, port);
+        checkInvalidObj(t, port);
     });
     t.on('end', server.close.bind(server));
 });
@@ -45,6 +47,20 @@ function checkValid (t, port) {
 
 function checkInvalid (t, port) {
     var r = hyperquest('http://beep:boop@localhost:' + port);
+    var data = '';
+    r.on('data', function (buf) { data += buf });
+    r.on('end', function () { t.equal(data, 'ACCESS DENIED!!!') });
+}
+
+function checkValidObj (t, port) {
+    var r = hyperquest('http://localhost:' + port, {auth: {user: 'moo', pass: 'hax'}});
+    var data = '';
+    r.on('data', function (buf) { data += buf });
+    r.on('end', function () { t.equal(data, 'WELCOME TO ZOMBO COM') });
+}
+
+function checkInvalidObj (t, port) {
+    var r = hyperquest('http://localhost:' + port, {auth: {user: 'beep', pass: 'boop'}});
     var data = '';
     r.on('data', function (buf) { data += buf });
     r.on('end', function () { t.equal(data, 'ACCESS DENIED!!!') });
