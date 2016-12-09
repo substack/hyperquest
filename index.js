@@ -49,6 +49,7 @@ function hyperquest (uri, opts, cb, extra) {
         dup.on('close', function () { r.destroy() });
         
         var r = req._send();
+        r.on('close', bind(dup, dup.emit, 'close'));
         r.on('error', bind(dup, dup.emit, 'error'));
         dup.emit('request', r);
         
