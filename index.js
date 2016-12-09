@@ -131,7 +131,9 @@ Req.prototype._send = function () {
         opts.cert = this.options.cert;
         opts.ca = this.options.ca;
         opts.ciphers = this.options.ciphers;
-        opts.rejectUnauthorized = this.options.rejectUnauthorized;
+        if (typeof this.options.rejectUnauthorized !== 'undefined') {
+            opts.rejectUnauthorized = this.options.rejectUnauthorized;
+        }
         opts.secureProtocol = this.options.secureProtocol;
     }
     var req = iface.request(opts);
