@@ -47,9 +47,9 @@ beep boop
 Now to drive the point home about pooling being evil and almost always never
 what you want ever.
 
-[request](https://github.com/mikeal/request)
-has its own forever agent thing that works pretty much the same as node core
-http.request: the wrong, horrible, broken way.
+[request](https://github.com/request/request)
+uses the node core pooling behavior by default, which we've established is
+wrong, horrible, broken.
 
 For instance, the following request code takes 12+ seconds to finish:
 
@@ -112,7 +112,9 @@ instances and it is SO hard to track down reliably.
 
 Compare to using hyperquest, which is exactly the same code but it takes 3
 seconds instead of 12 to finish because it's not completely self-crippled like
-request and core http.request.
+core http.request.  (If you need some of the extra features of request, you can
+accomplish the same thing by passing `agent: false` in its options, like
+hyperquest does by default.)
 
 ``` js
 var http = require('http');
