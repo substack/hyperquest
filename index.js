@@ -132,6 +132,7 @@ Req.prototype._send = function () {
         opts.ca = this.options.ca;
         opts.ciphers = this.options.ciphers;
         opts.rejectUnauthorized = this.options.rejectUnauthorized;
+        opts.ecdhCurve = this.options.ecdhCurve;
         opts.secureProtocol = this.options.secureProtocol;
     }
     var req = iface.request(opts);
