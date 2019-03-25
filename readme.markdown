@@ -252,7 +252,7 @@ as a result of the underlying `http.request()` call.
 
 The `'response'` event is forwarded from the underlying `http.request()`.
 
-## req.on('error', function (res) {})
+## req.on('error', function (err) {})
 
 The `'error'` event is forwarded from the underlying `http.request()`.
 
